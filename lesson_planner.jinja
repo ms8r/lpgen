@@ -1,0 +1,112 @@
+<# ---------------------------------------------------------------------------
+jinja2 template for LaTeX teaching lesson planner
+
+jinja delimiters used in this template are:
+
+   block_start_string:     <%
+   block_end_string:       %>
+   vairable_start_string:  <&
+   variable_end_string:    &>
+   comment_start_string:   <#
+   comment_end_string:     same as start string, swapped
+
+Input variables:
+
+    cycles : int
+        Number of complete multi-week cycles to print
+    weeks : str or other iterable
+        The labels to use for the different weeks within each cycle
+        (e.g.'A', 'B')
+    sched : dict
+        A dictionary, keyed by the week labels in `weeks`. Each value is
+        list containing a dictionary for each period. These list element
+        dictionaries are keyed by day od the week ('Mon', 'Tue', ...) and
+        each value is yet another dict, keyed by 'Subject', 'Class',
+        'Start', and 'End'.
+
+----------------------------------------------------------------------------#>
+\documentclass[10pt]{memoir}
+\usepackage[utf8]{inputenc}
+\setstocksize{297mm}{210mm}
+\settrimmedsize{\stockheight}{\stockwidth}{*}
+
+\settypeblocksize{26cm}{18cm}{*}
+\setlrmargins{1.5cm }{*}{*}
+\setulmargins{1.8cm}{*}{*}
+\setheadfoot{\baselineskip}{5mm}
+\setheaderspaces{0.35in}{*}{*}
+
+\checkandfixthelayout
+
+\usepackage{tabularx}
+
+% set up header and footer (see memoir manual for details)
+\newcommand{\evenhdrlbl}{\textsl{X Week}}
+\newcommand{\oddhdrlbl}{\textsl{X Week}}
+
+\makepagestyle{schedule}
+  \makeevenhead{schedule}{}{\evenhdrlbl}{}
+  \makeoddhead{schedule}{}{\oddhdrlbl}{}
+  \makeevenfoot{schedule}{}{\thepage}{}
+  \makeoddfoot{schedule}{}{\thepage}{}
+
+\begin{document}
+
+\begin{titlingpage}
+\begin{center}
+
+% \vplace for vertical centering; number argument specifies ration between
+% upper and lower margin
+\begin{vplace}[1]
+\textbf{\Huge <& teacher &>'s Lesson Planner}\\[0.25in]
+    \textit{\LARGE <& school_year &> School Year}\\[0.5in]
+{\huge Slavinski-Schweitzer Press}
+\end{vplace}
+
+\end{center}
+\end{titlingpage}
+
+\mainmatter
+\cleartoverso
+
+
+\pagestyle{schedule}
+
+<% for cycle in cycles %>
+
+<% for wk in weeks %>
+
+\begin{center}
+\begin{tabularx}{\textwidth}{|X|X|X|}\hline
+
+  \rule[-3mm]{0mm}{8mm} \textbf{Mon} & \textbf{Tue} & \textbf{Wed} \\
+  \hline \hline
+
+<% for period in sched[wk] %>
+  \rule[-36mm]{0mm}{41mm} \textbf{<& period['Mon']['Class'] &>} --  <& period['Mon']['Start'] &>- <& period['Mon']['End'] &> & \textbf{<& period['Tue']['Class'] &>} --  <& period['Tue']['Start'] &>-<& period['Tue']['End'] &> & \textbf{<& period['Wed']['Class'] &>} --  <& period['Wed']['Start'] &>-<& period['Wed']['End'] &> \\  \hline
+<% endfor %>
+
+\end{tabularx}
+\end{center}
+
+\renewcommand{\evenhdrlbl}{\Large{\textsl{<& wk &> Week}}}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{|X|X||X|}\hline
+  \rule[-3mm]{0mm}{8mm} \textbf{Thu} & \textbf{Fri} & \textbf{Notes} \\
+  \hline \hline
+
+<% for period in sched[wk] %>
+  \rule[-36mm]{0mm}{41mm} \textbf{<& period['Thu']['Class'] &>} --  <& period['Thu']['Start'] &>-<& period['Thu']['End'] &> & \textbf{<& period['Fri']['Class'] &>} --  <& period['Fri']['Start'] &>-<& period['Fri']['End'] &> & \\  \hline
+<% endfor %>
+
+\end{tabularx}
+\end{center}
+
+\renewcommand{\oddhdrlbl}{\Large{\textsl{<& wk &> Week}}}
+
+<% endfor %>
+
+<% endfor %>
+
+\end{document}
