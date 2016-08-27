@@ -60,7 +60,7 @@ Input variables:
 \begin{vplace}[1]
 \textbf{\Huge <& teacher &>'s Lesson Planner}\\[0.25in]
     \textit{\LARGE <& school_year &> School Year}\\[0.5in]
-{\huge Slavinski-Schweitzer Press}
+{\huge Rolling Hitch Press}
 \end{vplace}
 
 \end{center}
@@ -83,7 +83,7 @@ Input variables:
   \hline \hline
 
 <% for period in sched[wk] %>
-  \rule[-36mm]{0mm}{41mm} \textbf{<& period['Mon']['Class'] &>} --  <& period['Mon']['Start'] &>- <& period['Mon']['End'] &> & \textbf{<& period['Tue']['Class'] &>} --  <& period['Tue']['Start'] &>-<& period['Tue']['End'] &> & \textbf{<& period['Wed']['Class'] &>} --  <& period['Wed']['Start'] &>-<& period['Wed']['End'] &> \\  \hline
+  \rule[-30mm]{0mm}{35mm} <% if period['Mon']['Class'] != '' %>\textbf{<& period['Mon']['Class'] &>} --  <& period['Mon']['Start'] &>- <& period['Mon']['End'] &><% endif %> & <% if period['Tue']['Class'] != '' %>\textbf{<& period['Tue']['Class'] &>} --  <& period['Tue']['Start'] &>-<& period['Tue']['End'] &><% endif %> & <% if period['Wed']['Class'] != '' %>\textbf{<& period['Wed']['Class'] &>} --  <& period['Wed']['Start'] &>-<& period['Wed']['End'] &><% endif %> \\  \hline
 <% endfor %>
 
 \end{tabularx}
@@ -97,7 +97,7 @@ Input variables:
   \hline \hline
 
 <% for period in sched[wk] %>
-  \rule[-36mm]{0mm}{41mm} \textbf{<& period['Thu']['Class'] &>} --  <& period['Thu']['Start'] &>-<& period['Thu']['End'] &> & \textbf{<& period['Fri']['Class'] &>} --  <& period['Fri']['Start'] &>-<& period['Fri']['End'] &> & \\  \hline
+  \rule[-30mm]{0mm}{35mm} <% if period['Thu']['Class'] != '' %>\textbf{<& period['Thu']['Class'] &>} --  <& period['Thu']['Start'] &>-<& period['Thu']['End'] &><% endif %> & <% if period['Fri']['Class'] != '' %>\textbf{<& period['Fri']['Class'] &>} --  <& period['Fri']['Start'] &>-<& period['Fri']['End'] &><% endif %> & \\  \hline
 <% endfor %>
 
 \end{tabularx}

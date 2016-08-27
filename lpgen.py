@@ -29,7 +29,10 @@ def gen_lesson_plan(args):
 
     # strip seconds of start and end times
     for i in product(range(1, num_periods + 1), ['Start', 'End']):
-        sdf.loc[i] = sdf.loc[i].map(lambda k: k[:5])
+        sdf.loc[i] = sdf.loc[i].map(lambda k: '' if pd.isnull(k) else k[:5] )
+
+    # replace NaN by '' so the jinja templae can check for empty strings
+    sdf.fillna('', inplace=True)
 
     sched = {}
     for wk in weeks:
