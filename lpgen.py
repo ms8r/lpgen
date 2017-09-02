@@ -15,12 +15,13 @@ import jinja2 as j2
 _SCHED_TMPL = 'lesson_planner.jinja'
 
 
-def gen_lesson_plan(args):
+def gen_lesson_plan(sched_csv, num_cycles, teacher, year):
     """
     Generates a LaTeX file from `_SCHED_TMPL` with the schedule data provided
-    in `args.input`
+    in `sched_csv`. Will print `num_cycles` repitions and print `teacher` and
+    `year` on front page.
     """
-    sdf = pd.read_csv(args.input, sep=',', header=[0,1], index_col=[0,1])
+    sdf = pd.read_csv(sched_csv, sep=',', header=[0,1], index_col=[0,1])
     sdf.index.names = ['Period', 'Item']
     sdf.columns.names = ['Week', 'Period']
 
@@ -52,19 +53,16 @@ def gen_lesson_plan(args):
 
     tmpl = tmplEnv.get_template(_SCHED_TMPL)
 
-    with open(args.output, 'w') as foo:
-        foo.write(tmpl.render(cycles=range(args.cycles), weeks=weeks,
-                              sched=sched, teacher=args.teacher,
-                              school_year=args.year))
+    print(tmpl.render(cycles=range(num_cycles), weeks=weeks,
+                      sched=sched, teacher=teacher,
+                      school_year=year))
 
 
 def setup_parser(p):
     p.add_argument('--cycles', type=int, required=True, help="""number of
                    schedule cycles to print""")
-    p.add_argument('--input', default=None, required=True, help="""csv file
-                   with schedule data""")
-    p.add_argument('--output', default=None, required=True, help="""LaTeX
-                   output file to be generated""")
+    p.add_argument('--input', default='-', help="""csv file with schedule
+                   data; will read from stdin in none specified""")
     p.add_argument('--teacher', default=None, required=True, help="""name of
                    teacher to be printed on front page""")
     p.add_argument('--year', default=None, required=True, help="""school year
@@ -73,9 +71,8 @@ def setup_parser(p):
 
 if __name__ == '__main__':
 
-    print(__doc__)
-
     parser = argparse.ArgumentParser(description=__doc__)
     setup_parser(parser)
     args = parser.parse_args()
-    gen_lesson_plan(args)
+    gen_lesson_plan(sched_csv=args.input, num_cycles=args.cycles,
+                    teacher=args.teacher, year=args.year)

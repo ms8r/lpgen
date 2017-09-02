@@ -1,6 +1,7 @@
 *~
 non-git
-.ipynb_checkpoints
 *.log
 *.aux
+*.tex
 *.pdf
+__pycache__
