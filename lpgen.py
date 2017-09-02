@@ -61,7 +61,7 @@ def gen_lesson_plan(sched_csv, num_cycles, teacher, year):
 def setup_parser(p):
     p.add_argument('--cycles', type=int, required=True, help="""number of
                    schedule cycles to print""")
-    p.add_argument('--input', default='-', help="""csv file with schedule
+    p.add_argument('--input', required=True, help="""csv file with schedule
                    data; will read from stdin in none specified""")
     p.add_argument('--teacher', default=None, required=True, help="""name of
                    teacher to be printed on front page""")
